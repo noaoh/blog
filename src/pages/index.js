@@ -9,7 +9,11 @@ const NODE_ENV = process.env.NODE_ENV;
 
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
-  const posts = data.allMarkdownRemark.nodes
+  const posts = NODE_ENV === 'development' ? (
+    data.allMarkdownRemark.nodes
+  ) : (
+    data.allMarkdownRemark.nodes.filter(post => post.frontmatter.published)
+  );
 
   if (posts.length === 0) {
     return (
@@ -79,7 +83,6 @@ export const pageQuery = graphql`
     }
     allMarkdownRemark(
       sort: { frontmatter: { date: DESC } },
-      filter: { frontmatter: { published: { eq: true } } }
     ) {
         nodes {
           excerpt
@@ -90,6 +93,7 @@ export const pageQuery = graphql`
             date(formatString: "MMMM DD, YYYY")
             title
             description
+            published
           }
         }
     }
