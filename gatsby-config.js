@@ -51,6 +51,7 @@ module.exports = {
           },
           `gatsby-remark-prismjs`,
         ],
+        footnotes: true,
       },
     },
     `gatsby-transformer-sharp`,
