@@ -5,6 +5,8 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
+const NODE_ENV = process.env.NODE_ENV;
+
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allMarkdownRemark.nodes
@@ -75,18 +77,21 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
-      nodes {
-        excerpt
-        fields {
-          slug
+    allMarkdownRemark(
+      sort: { frontmatter: { date: DESC } },
+      filter: { frontmatter: { published: { eq: true } } }
+    ) {
+        nodes {
+          excerpt
+          fields {
+            slug
+          }
+          frontmatter {
+            date(formatString: "MMMM DD, YYYY")
+            title
+            description
+          }
         }
-        frontmatter {
-          date(formatString: "MMMM DD, YYYY")
-          title
-          description
-        }
-      }
     }
   }
 `
